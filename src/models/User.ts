@@ -7,7 +7,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare firstname: string;
   declare lastname: string;
   declare email: string;
-  declare phone: number;
+  declare phone: string;
 }
 
 export const setupUser = (sequelize: Sequelize) => {
@@ -22,7 +22,7 @@ export const setupUser = (sequelize: Sequelize) => {
       firstname: DataTypes.STRING,
       lastname: DataTypes.STRING,
       email: DataTypes.STRING,
-      phone: DataTypes.INTEGER,
+      phone: DataTypes.STRING,
     },
     {
       sequelize,

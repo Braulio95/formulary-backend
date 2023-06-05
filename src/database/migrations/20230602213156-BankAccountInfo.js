@@ -10,11 +10,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       acc_number: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       clabe: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       bank: {

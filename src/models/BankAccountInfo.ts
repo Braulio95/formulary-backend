@@ -17,8 +17,8 @@ export const setupBankAccountInfo = (sequelize: Sequelize) => {
         autoIncrement: true,
         primaryKey: true
       },
-      acc_number: DataTypes.NUMBER,
-      clabe: DataTypes.NUMBER,
+      acc_number: DataTypes.STRING,
+      clabe: DataTypes.STRING,
       bank: DataTypes.STRING,
     },
     {
