@@ -1,11 +1,31 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
 import BankAccountInfo from '../models/BankAccountInfo';
 import User from '../models/User';
 
-// Create BankAccountInfo
+const createBankAccountInfoSchema = Joi.object({
+    acc_number: Joi.string().pattern(/^\d+$/).required(),
+    clabe: Joi.string().pattern(/^\d+$/).required(),
+    bank: Joi.string().required(),
+    user_id: Joi.number().integer().positive().required(),
+});
+
+const updateBankAccountInfoSchema = Joi.object({
+    acc_number: Joi.string().pattern(/^\d+$/).required(),
+    clabe: Joi.string().pattern(/^\d+$/).required(),
+    bank: Joi.string().required(),
+});
+
 export const createBankAccountInfo = async (req: Request, res: Response): Promise<void> => {
     try {
         const { acc_number, clabe, bank, user_id } = req.body;
+
+        // Validate request body
+        const { error } = createBankAccountInfoSchema.validate({ acc_number, clabe, bank, user_id });
+        if (error) {
+            res.status(400).json({ error: error.details[0].message });
+            return;
+        }
 
         // Check if the user exists before creating the bank account info
         const existingUser = await User.findByPk(user_id);
@@ -21,7 +41,6 @@ export const createBankAccountInfo = async (req: Request, res: Response): Promis
     }
 };
 
-// Get BankAccountInfo by ID
 export const getBankAccountInfoById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
@@ -36,11 +55,17 @@ export const getBankAccountInfoById = async (req: Request, res: Response): Promi
     }
 };
 
-// Update BankAccountInfo
 export const updateBankAccountInfo = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
         const { acc_number, clabe, bank } = req.body;
+
+        // Validate request body
+        const { error } = updateBankAccountInfoSchema.validate({ acc_number, clabe, bank });
+        if (error) {
+            res.status(400).json({ error: error.details[0].message });
+            return;
+        }
 
         const existingBankAccountInfo = await BankAccountInfo.findByPk(id);
         if (existingBankAccountInfo) {
@@ -54,7 +79,6 @@ export const updateBankAccountInfo = async (req: Request, res: Response): Promis
     }
 };
 
-// Delete BankAccountInfo
 export const deleteBankAccountInfo = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;

@@ -1,5 +1,15 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
+import Joi from 'joi';
+
+// User Validation Schema
+const createUserSchema = Joi.object({
+    username: Joi.string().required(),
+    firstname: Joi.string().min(3).max(30).regex(/^[a-zA-Z0-9_-]+$/),
+    lastname: Joi.string().email().required(),
+    email: Joi.string().email().required(),
+    phone: Joi.string().pattern(/^\d{10}$/).required(),
+});
 
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -18,7 +28,14 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 
 export const createUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { username, firstname, lastname, email, phone } = req.body;
+        const { error, value } = createUserSchema.validate(req.body);
+
+        if (error) {
+            res.status(400).json({ error: error.details[0].message });
+            return;
+        }
+
+        const { username, firstname, lastname, email, phone } = value;
         const user = await User.create({ username, firstname, lastname, email, phone });
         res.status(201).json(user);
     } catch (error) {
@@ -29,7 +46,14 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const { username, firstname, lastname, email, phone } = req.body;
+        const { error, value } = createUserSchema.validate(req.body);
+
+        if (error) {
+            res.status(400).json({ error: error.details[0].message });
+            return;
+        }
+
+        const { username, firstname, lastname, email, phone } = value;
 
         const user = await User.findByPk(id);
 
