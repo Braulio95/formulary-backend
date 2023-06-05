@@ -32,7 +32,7 @@ module.exports = {
       },
       proof_classes_completed: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       license_completed: {
         type: Sequelize.BOOLEAN,
@@ -40,7 +40,7 @@ module.exports = {
       },
       proof_license_completed: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       user_id: {
         type: Sequelize.INTEGER,
